@@ -27,7 +27,7 @@ The Zabbix agent is then configured to fetch the data from the json files, proce
 4. install the required python dependencies with pip
 5. use the cron-wrapper.sh file to wrap the commands in your cron file
 6. setup Zabbix to fetch the aggregated output data as an item under your host
-7. setup Zabbix to compute derived data from the captured data
+7. setup Zabbix to compute dependent data from the captured data
 8. setup triggers on Zabbix
 
 ## Install the "wrapper" folder with its content on your machine
@@ -42,7 +42,7 @@ For this guide we will assume you to have copied the files so that you have a fo
 
 The wrapper scripts stores aggregated data in some particular files.
 
-The default output directory is '/var/cron-wrapper/data', but you can change it in the cron-wrapper.py file if you want.
+The default output directory is `/var/cron-wrapper/data`, but you can change it with the --output-folder parameter or editing the cron-wrapper.py file if you want.
 
 You should create the output folder by running:
 
@@ -82,14 +82,14 @@ pip install -r requirements.txt
 
 Now you have to configure your cronfiles in order to proxy your commands on the cron-wrapper.sh script.
 
-Let's assume you hare using **Restic** to backup some data and you have a crontab with the following content:
+Let's assume you are using **Restic** to backup some data and you have a crontab with the following content:
 
 ```
 0 4 * * * root restic backup /var/lib/mysql
 0 3 * * * root restic backup /home
 ```
 
-You should replace the entries you want to monitor using the format
+You should replace the entries you want to monitor using the syntax
 
 `<schedule> <user> <cron-wrapper.sh absolute path> <cron-wrapper.sh optional arguments> "<cronjob name>" "<original command to run>"`
 
@@ -102,7 +102,7 @@ So that your file becomes for instance:
 
 Please ensure the user you run the cronjobs with has write access to the output folder (by default `/var/cron-wrapper/data`).
 
-See the following chaptes for a list of optional arguments.
+See the following chapters for a list of optional arguments.
 
 ## (optional) Take a look at the data
 
@@ -189,9 +189,9 @@ Assuming you are already quite familiar with Zabbix, you should configure an ite
 
 ![aggregated data item](docs/guide-zabbix-step1.JPG)
 
-Now your Zabbix instance is configured to efficiently fetch all the raw data it needs to monitor your cronjobs. However, to allow for finer monitoring some derived items should be created before configuring triggers.
+Now your Zabbix instance is configured to efficiently fetch all the raw data it needs to monitor your cronjobs. However, to allow for finer monitoring some dependent items should be created before configuring triggers.
 
-## Setup Zabbix to compute derived data from the captured data
+## Setup Zabbix to compute dependent data from the captured data
 
 Now, **for each** cronjob you want to monitor, you should create dependent items extracting granular data.
 
