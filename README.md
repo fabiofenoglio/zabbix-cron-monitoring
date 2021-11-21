@@ -1,8 +1,21 @@
-# zabbix-cron-monitoring
+# Monitor your cronjobs with Zabbix and a wrapper script
 
-This is a python3 wrapper script that allows you to monitor your cron jobs with Zabbix.
+This repository contains a python3 wrapper script that allows you to monitor your cron jobs with Zabbix.
 
-## What does it do?
+In this document:
+
+- [What is it?](#what-is-it)
+- [How does it work with Zabbix?](#how-does-it-work-with-zabbix)
+- [Setup instructions](#setup-instructions)
+- [Syntax reference](#syntax-reference)
+  - [Wrapper script syntax](#wrapper-script-syntax)
+  - [Details of available invocation parameters](#details-of-available-invocation-parameters)
+  - [Available data in the output json files](#available-data-in-the-output-json-files)
+- [Additional info](#additional-info)
+  - [Want to handle timing out of a cronjob?](#want-to-handle-timing-out-of-a-cronjob)
+  - [Want to redirect the stdout of the wrapper script to a file?](#want-to-redirect-the-stdout-of-the-wrapper-script-to-a-file)
+
+# What is it?
 
 This is a python script that wraps your cronjob commands with additional features:
 
@@ -13,22 +26,24 @@ This is a python script that wraps your cronjob commands with additional feature
 - It outputs all captured data to json files
 - It outputs aggregated data from all monitored jobs to a single json file for easy fetching
 
-## How does it work?
+# How does it work with Zabbix?
 
 The script wraps your cron commands, capturing stats about execution and dumping the resulting data in some json files.
 
 The Zabbix agent is then configured to fetch the data from the json files, process it and take actions if needed.
 
-## Setup instructions
+# Setup instructions
 
-1. install the "wrapper" folder with its content on your machine
-2. create the folder that will store the output data
-3. make the .sh file executable by running chmod +x on it
-4. install the required python dependencies with pip
-5. use the cron-wrapper.sh file to wrap the commands in your cron file
-6. setup Zabbix to fetch the aggregated output data as an item under your host
-7. setup Zabbix to compute dependent data from the captured data
-8. setup triggers on Zabbix
+- [Install the "wrapper" folder with its content on your machine](#install-the-wrapper-folder-with-its-content-on-your-machine)
+- [Create the folder that will store the output data](#create-the-folder-that-will-store-the-output-data)
+- [Make the .sh file executable by running chmod +x on it](#make-the-sh-file-executable-by-running-chmod-x-on-it)
+- [Install the required python dependencies with pip](#install-the-required-python-dependencies-with-pip)
+- [Use the cron-wrapper.sh file to wrap the commands in your cron file](#use-the-cron-wrappersh-file-to-wrap-the-commands-in-your-cron-file)
+- [(optional) Take a look at the data](#optional-take-a-look-at-the-data)
+- [Setup Zabbix to fetch the aggregated output data as an item under your host](#setup-zabbix-to-fetch-the-aggregated-output-data-as-an-item-under-your-host)
+- [Setup Zabbix to compute dependent data from the captured data](#setup-zabbix-to-compute-dependent-data-from-the-captured-data)
+- [Setup triggers on Zabbix](#setup-triggers-on-zabbix)
+
 
 ## Install the "wrapper" folder with its content on your machine
 
@@ -286,6 +301,8 @@ This will fire the trigger:
 
 Congratulations, your cronjobs are now being effectively monitored!
 
+# Syntax reference
+
 ## Wrapper script syntax
 
 The scripts accepts invocation with the following syntax:
@@ -324,7 +341,7 @@ optional arguments:
   --debug               run in debug mode with additional output
 ```
 
-Details of the available parameters:
+## Details of available invocation parameters
 
 | Parameter  | Usage sample | Default value | Notes |
 | ------------- | ------------- | ------------- | ------------- |
@@ -338,7 +355,7 @@ Details of the available parameters:
 | --skip-aggregation  | --skip-aggregation | false | runs the command in the wrapper, writes the output to the job json file but does not write to the aggregated json data file |
 | --verbose, -v  | --verbose | false | runs in verbose mode with additional output. When run in verbose mode additional output data is added to the json files (see later). |
 
-Available data in the output json files:
+## Available data in the output json files
 
 | Key  | Format | Sample value | Notes |
 | ------------- | ------------- | ------------- | ------------- |
@@ -359,6 +376,9 @@ Available data in the output json files:
 | stdErr | string | stderr from the command execution | stderr output from the command execution. Only available when run with --report-stdout |
 | error | string | an error message | error message in case the latest execution failed. Only available when the latest execution failed. |
 | errorDetails | string | some additional error details | additional error details in case the latest execution failed. Only available when the latest execution failed. |
+
+
+# Additional info
 
 ### Want to handle timing out of a cronjob?
 
